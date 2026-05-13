@@ -1,0 +1,7 @@
+src/
+tests/
+coverage/
+*.test.ts
+tsconfig.json
+vitest.config.ts
+.pi-lens/
