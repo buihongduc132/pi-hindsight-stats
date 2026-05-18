@@ -1,7 +1,7 @@
 {
   "name": "pi-hindsight-stats",
   "version": "0.1.0",
-  "description": "Hindsight memory analytics CLI — tags, entities, and bank statistics for Pi agent sessions",
+  "description": "Hindsight memory analytics CLI \u2014 tags, entities, and bank statistics for Pi agent sessions",
   "type": "module",
   "license": "MIT",
   "author": "buihongduc132",
@@ -23,7 +23,9 @@
     "stats",
     "analytics",
     "tags",
-    "entities"
+    "entities",
+    "pi-extension",
+    "pi-coding-agent"
   ],
   "scripts": {
     "test": "vitest run --coverage",
