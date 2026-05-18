@@ -1,16 +1,23 @@
 # pi-hindsight-stats
 
-Compact project-insight cover for engineering work, backed by [Hindsight](https://github.com/vectorize-io/hindsight) REST APIs.
+[![npm version](https://img.shields.io/npm/v/pi-hindsight-stats?style=flat-square)](https://www.npmjs.com/package/pi-hindsight-stats)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue.svg)](https://www.typescriptlang.org/)
 
-Fetches stats from Hindsight banks and renders a concise runtime cover showing top tags, entities, hotspots, and mental models — injected into Pi agent context on session start.
+**Hindsight memory analytics for Pi agent sessions** — fetches tags, entities, entity-graph hotspots, and mental models from [Hindsight](https://github.com/buihongduc132/hindsight-pi-local) banks and renders a compact project-insight cover.
+
+Injected into Pi agent context on session start (async, non-blocking) or queried on-demand via CLI and slash commands.
 
 ## Features
 
-- **Pi extension** — async injection on `session_start`, non-blocking
-- **CLI** — `hindsight-stats cover`, `hindsight-stats top-tags`, etc.
-- **Cached** — configurable TTL-based disk cache to avoid redundant API calls
-- **Configurable steps** — enable/disable individual stat sections (tags, entities, hotspots, mental models)
-- **Token-budgeted** — respects total max token budget for context injection
+- **Tag analytics** — top tags with level-grouping and ranking
+- **Entity tracking** — most-mentioned named entities with mention counts
+- **Graph visualization** — hotspot chains from entity relationship graph
+- **Mental models** — active mental model summaries
+- **TTL-based disk cache** — avoids redundant API calls with configurable TTL
+- **Token-budgeted rendering** — respects configurable max token budget for context injection
+- **Non-blocking injection** — async fire-and-forget on `session_start`, never blocks Pi workflow
+- **Configurable steps** — enable/disable individual stat sections independently
 
 ## Example Output
 
@@ -31,22 +38,51 @@ Fetches stats from Hindsight banks and renders a concise runtime cover showing t
 - coding-constraints
 ```
 
-## Install
+## Installation
+
+### For Humans
 
 ```bash
-# In Pi settings.json packages array:
-"https://github.com/buihongduc132/pi-hindsight-stats"
+npm install pi-hindsight-stats
 ```
 
-Or local path:
+### For AI Agents
 
-```bash
-"/path/to/pi-hindsight-stats"
+Add to your Pi `settings.json` packages array:
+
+```json
+{
+  "packages": [
+    "pi-hindsight-stats"
+  ]
+}
+```
+
+### For pi git-sourced
+
+Add the git URL to your Pi `settings.json` packages array:
+
+```json
+{
+  "packages": [
+    "https://github.com/buihongduc132/pi-hindsight-stats"
+  ]
+}
+```
+
+Or local path for development:
+
+```json
+{
+  "packages": [
+    "/path/to/pi-hindsight-stats"
+  ]
+}
 ```
 
 ## Prerequisites
 
-- A running Hindsight server
+- A running [Hindsight](https://github.com/buihongduc132/hindsight-pi-local) server
 - Pi CLI agent (`@mariozechner/pi-coding-agent`)
 
 ## Configuration
@@ -95,17 +131,33 @@ env vars (HINDSIGHT_BASE_URL, HINDSIGHT_API_KEY, HINDSIGHT_BANK_ID)
 
 Each step supports: `enabled`, `limit`, `maxTokens`, and optional `level` (graph traversal depth).
 
-## CLI Usage
+## Usage
+
+### Pi Extension (automatic)
+
+When installed as a Pi package, the extension auto-registers hooks and commands:
+
+- **Session start** — if `injectOnSessionStart` is `true`, fetches and injects a stats cover into context (non-blocking)
+- **`hindsight-stats:cover`** — show stats cover on demand via Pi slash command
+- **`hindsight-stats:cache-clear`** — clear the stats cache via Pi slash command
+
+### CLI
 
 ```bash
 # Full cover report
-npx tsx cli/index.ts cover
+npx hindsight-stats cover
 
 # Individual sections
-npx tsx cli/index.ts top-tags --limit 10
-npx tsx cli/index.ts top-entities --limit 10
-npx tsx cli/index.ts hotspots --limit 5
-npx tsx cli/index.ts top-mental-models --limit 5
+npx hindsight-stats top-tags --limit 10
+npx hindsight-stats top-entities --limit 10
+npx hindsight-stats hotspots --limit 5
+npx hindsight-stats top-mental-models --limit 5
+
+# Cache management
+npx hindsight-stats cache-clear
+
+# Diagnostics
+npx hindsight-stats doctor
 ```
 
 ## Architecture
@@ -126,10 +178,10 @@ tests/          # Vitest test suite
 
 ```bash
 npm install
-npm test
 npm run typecheck
+npm test
 ```
 
 ## License
 
-MIT © 2025 buihongduc132
+MIT © 2025 [buihongduc132](https://github.com/buihongduc132)
